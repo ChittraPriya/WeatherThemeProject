@@ -1,2 +1,2 @@
 `npm weather`
-to sun this code
+to run this code
