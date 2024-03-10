@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather-based Theme Change</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <style>
+    
+        body {
+            font-family: Arial, sans-serif;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .sunny {
+            background-color: #ffd700; 
+            color: #000;
+        }
+        
+        .cloudy {
+            background-color: #d3d3d3; 
+            color: #000;
+        }
+        
+        .rainy {
+            background-color: #4682b4; 
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather-based Theme Change</h1>
+    <p id="weatherInfo"></p>
+    
+    <script>
+    
+        navigator.geolocation.getCurrentPosition(async function(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            
+        
+            const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=7f6645e3f8b66e196580bbbadc924fa9&units=metric`);
+            const weatherData = await weatherResponse.json();
+            const weatherCondition = weatherData.weather[0].main;
+            
+            const body = document.body;
+            switch (weatherCondition) {
+                case 'Clear':
+                    body.classList.add('sunny');
+                    document.getElementById('weatherInfo').textContent = `In ${location}, It's sunny outside with a temperature of ${weatherData.main.temp}°C.`;
+                    break;
+                case 'Clouds':
+                    body.classList.add('cloudy');
+                    document.getElementById('weatherInfo').textContent = `In ${location}, it's cloudy outside with a temperature of ${weatherData.main.temp}°C.`;
+                    break;
+                case 'Rain':
+                    body.classList.add('rainy');
+                    document.getElementById('weatherInfo').textContent = `In ${location}, it's raining outside with a temperature of ${weatherData.main.temp}°C.`;
+
+                    break;
+                default:
+                    document.getElementById('weatherInfo').textContent = 'Unable to determine weather condition.';
+            }
+        }, function(error) {
+            console.error('Error getting location:', error);
+            document.getElementById('weatherInfo').textContent = 'Unable to get location.';
+        });
+    </script>
+
+    
+    
+   
+</body>
+</html>
